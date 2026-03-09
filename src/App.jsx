@@ -12,11 +12,11 @@ function App() {
     <div className="App">
       <h1>Pokedex & My Team</h1>
       <nav style={{ marginBottom: '20px' }}>
-        <Link to="/">Home</Link> | <Link to="/team">Team Details</Link>
+        <Link to="/UWJS-Project-2">Home</Link> | <Link to="/team">Team Details</Link>
       </nav>
       {location.pathname !== '/team' && <TeamQuickView />}
       <Routes>
-        <Route path="/" element={<PokemonList />} />
+        <Route path="/UWJS-Project-2" element={<PokemonList />} />
         <Route path="/pokemon/:name" element={<PokemonDetails />} />
         <Route path="/team" element={<TeamDetails />} />
       </Routes>
