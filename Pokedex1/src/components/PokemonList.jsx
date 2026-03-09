@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+/* Global variable */
+const MAX_POKEMON = 1025;
+
+
+/* A component that prompts the user and then fetches a certain number of Pokémon from the API, then returns an array of Pokémon objects */
+const PokemonList = () => {
+  /* Initialize state variables */
+  const [pokemon, setPokemon] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [numPokemon, setNumPokemon] = useState('');
+
+  /* Async function that creates and populates an array (pokemon) with Pokémon objects from the API (number generated is determined by user input) */
+  const handleFetchPokemon = async (e) => {
+    e.preventDefault();
+    const num = parseInt(numPokemon);
+    
+    /* Error handling and form validation */
+    if (isNaN(num) || num < 1 || num > MAX_POKEMON) {
+      setError(`Please enter a number between 1 and ${MAX_POKEMON}`);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setPokemon([]);
+    
+    try {
+      const promises = [];
+      /* For loop that grabs the user-specified amount of Pokémon */
+      for (let i = 1; i <= num; i++) {
+        promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
+      }
+      const results = await Promise.all(promises);
+      setPokemon(results);
+      console.log(results);
+    } catch (err) {
+      setError('Failed to fetch Pokémon.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
+    <div className="pokemon-list-container">
+      {error && <p style={{color: 'red'}}>{error}</p>}
+      {pokemon.length === 0 ? (
+        /* Div with input form and submit button */
+        <div className="pokemon-input-form">
+          <h2>How many Pokémon would you like to see? (1-{MAX_POKEMON})</h2>
+          <form onSubmit={handleFetchPokemon}>
+            <input
+              type="number"
+              value={numPokemon}
+              onChange={(e) => setNumPokemon(e.target.value)}
+              placeholder={`Enter number (1-${MAX_POKEMON})`}
+              min="1"
+              max={MAX_POKEMON}
+            />
+            <button type="submit">Load Pokémon</button>
+          </form>
+        </div>
+      ) : (
+        /* Div that renders array of Pokémon to screen showing Pokémon name and an image, with the entire element being a link to details page */
+        <div className="pokemon-list">
+          {pokemon.map(poke => (
+            <Link key={poke.id} to={`/pokemon/${poke.name}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="pokemon-card">
+                <h3>{poke.name.charAt(0).toUpperCase() + poke.name.slice(1)}</h3>
+                <img src={poke.sprites.front_default} alt={poke.name} />
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PokemonList;
