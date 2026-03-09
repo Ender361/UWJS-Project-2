@@ -4,8 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/UWJS-Project-2/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokédex</title>
-    <script type="module" crossorigin src="/UWJS-Project-2/assets/index-wZvveb_Y.js"></script>
+    <title>My Pokédex</title>
+    <script>
+      {
+        const l = window.location;
+        if (l.search[1] === '/') {
+          const decoded = l.search.slice(1).split('&').map(s => s.replace(/~and~/g, '&')).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/UWJS-Project-2/assets/index-BVyRC41X.js"></script>
     <link rel="stylesheet" crossorigin href="/UWJS-Project-2/assets/index-DbW32sJJ.css">
   </head>
   <body>
