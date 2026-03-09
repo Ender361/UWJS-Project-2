@@ -1,6 +1,6 @@
 # UWJS-Project-2
 
-URL: https://<Ender361.github.io/UWJS-Project-2/
+URL: https://Ender361.github.io/UWJS-Project-2/
 
 Summary: This project allows the user to get an organized list of Pokémon from an external API and then view specific details on each of the Pokémon in the list. It
 also allows the user to add Pokémon to a 'team' which can contain up to 3 Pokémon and details additional information about each member and the team as a whole.
