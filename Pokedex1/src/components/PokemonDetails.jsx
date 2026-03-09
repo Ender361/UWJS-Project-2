@@ -3,13 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 
 /* A component that creates a small page with details on a pokemon selected from PokemonList */
 const PokemonDetails = () => {
-  /* Initialize state variables */
+  /* Initialize state and param variables */
   const { name } = useParams();
   const [pokemon, setPokemon] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    /* Async function that grabs details from API based on Pokemon name */
     const fetchPokemonDetails = async () => {
       setLoading(true);
       setError(null);
@@ -37,12 +38,15 @@ const PokemonDetails = () => {
   if (!pokemon) return <p>No Pokemon found</p>;
 
   return (
+    /*Div with 'back to list' link, Pokemon name, image, and add-to-team button */
     <div className='pokemon-details'>
       <Link to="/">← Back to List</Link>
       <h2>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h2>
+      {/* ...existing code... */}
       {pokemon.sprites.front_default && (
         <img src={pokemon.sprites.front_default} alt={pokemon.name} style={{ width: '200px', height: '200px' }} />
       )}
+      {/*Div with different lines of Pokemon info */}
       <div className='pokemon-info'>
         <p><strong>Height:</strong> {pokemon.height / 10} m</p>
         <p><strong>Weight:</strong> {pokemon.weight / 10} kg</p>
@@ -50,6 +54,24 @@ const PokemonDetails = () => {
         <p><strong>Types:</strong> {pokemon.types.map(type => type.type.name).join(', ')}</p>
         <p><strong>Abilities:</strong> {pokemon.abilities.map(ability => ability.ability.name).join(', ')}</p>
       </div>
+      {/* Add to Team button */}
+      <button
+        onClick={() => {
+          // Get current team from localStorage
+          const team = JSON.parse(localStorage.getItem('pokemonTeam')) || [];
+          // Only add if not already in team and team has less than 3
+          if (team.length < 3 && !team.some(p => p.name === pokemon.name)) {
+            const newTeam = [...team, { name: pokemon.name }];
+            localStorage.setItem('pokemonTeam', JSON.stringify(newTeam));
+            window.dispatchEvent(new Event('teamUpdated'));
+            alert(`${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} added to your team!`);
+          } else if (team.some(p => p.name === pokemon.name)) {
+            alert('This Pokémon is already in your team!');
+          } else {
+            alert('Your team is full!');
+          }
+        }}
+      >Add Pokémon to Team</button>
     </div>
   );
 }

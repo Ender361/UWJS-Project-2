@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-/* A component that fetches a certain number of pokemon from the api, then returns an array of pokemon objects */
+/* Global variable */
 const MAX_POKEMON = 1025;
 
+
+/* A component that fetches a certain number of pokemon from the api, then returns an array of pokemon objects */
 const PokemonList = () => {
   /* Initialize state variables */
   const [pokemon, setPokemon] = useState([]);
@@ -11,10 +13,12 @@ const PokemonList = () => {
   const [error, setError] = useState(null);
   const [numPokemon, setNumPokemon] = useState('');
 
+  /* Async function that creates and populates an array (pokemon) with Pokemon objects from the API (number generated is determined by user input) */
   const handleFetchPokemon = async (e) => {
     e.preventDefault();
     const num = parseInt(numPokemon);
     
+    /* Error handling and form validation */
     if (isNaN(num) || num < 1 || num > MAX_POKEMON) {
       setError(`Please enter a number between 1 and ${MAX_POKEMON}`);
       return;
@@ -46,6 +50,7 @@ const PokemonList = () => {
     <div className="pokemon-list-container">
       {error && <p style={{color: 'red'}}>{error}</p>}
       {pokemon.length === 0 ? (
+        /* Div with input form and submit button */
         <div className="pokemon-input-form">
           <h2>How many Pokémon would you like to see? (1-{MAX_POKEMON})</h2>
           <form onSubmit={handleFetchPokemon}>
@@ -61,6 +66,7 @@ const PokemonList = () => {
           </form>
         </div>
       ) : (
+        /* Div that renders array of Pokemon to screen showing Pokemon name and an image, with the entire element being a link to details page */
         <div className="pokemon-list">
           {pokemon.map(poke => (
             <Link key={poke.id} to={`/pokemon/${poke.name}`} style={{ textDecoration: 'none', color: 'inherit' }}>
