@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-/* TeamDetails: Shows detailed info for each Pokémon in the user's team */
+/* TeamDetails: Shows detailed info for each Pokémon in the user's team along with overall battle and cuteness rating */
 const TeamDetails = () => {
   const [team, setTeam] = useState([]);
   const [pokeDetails, setPokeDetails] = useState([]);
@@ -9,6 +9,7 @@ const TeamDetails = () => {
   const [battleRating, setBattleRating] = useState(null);
   const [cutenessRating, setCutenessRating] = useState(null);
 
+  /* Function to show shiny or not shiny sprite for Pokémon using boolean */
   const toggleShiny = (pokemonKey) => {
     setShowShiny((prev) => ({
       ...prev,
@@ -16,12 +17,13 @@ const TeamDetails = () => {
     }));
   };
 
+
   useEffect(() => {
     const storedTeam = localStorage.getItem('pokemonTeam');
     if (storedTeam) {
       const parsedTeam = JSON.parse(storedTeam);
       setTeam(parsedTeam);
-      // Fetch details and pokedex entry for each pokemon
+      /* Fetch details and Pokédex entry for each Pokémon */
       Promise.all(
         parsedTeam.map(async p => {
           const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.name.toLowerCase()}`);
@@ -30,7 +32,7 @@ const TeamDetails = () => {
           try {
             const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${p.name.toLowerCase()}`);
             const speciesData = await speciesRes.json();
-            // Find English flavor text
+            /* Find English flavor text (Pokédex Entry) */
             const englishEntry = speciesData.flavor_text_entries.find(e => e.language.name === "en");
             entry = englishEntry ? englishEntry.flavor_text.replace(/\n|\f/g, " ") : "No Pokédex entry found.";
           } catch {
@@ -41,11 +43,11 @@ const TeamDetails = () => {
       ).then(results => {
         setPokeDetails(results.map(r => r.pokeData));
         setPokedexEntries(results.map(r => r.entry));
-        // Calculate ratings only if not already stored
+        /* Calculate ratings only if not already stored */
         let storedBattle = localStorage.getItem('battleRating');
         let storedCuteness = localStorage.getItem('cutenessRating');
         if (!storedBattle || !storedCuteness) {
-          // Calculate Battle Rating
+          /* Calculate battle rating (team hp + random 1-30) and cuteness rating (random 1-100) */
           const totalHP = results.reduce((sum, r) => {
             const hp = r.pokeData.stats.find(s => s.stat.name === 'hp')?.base_stat || 0;
             return sum + hp;
@@ -69,6 +71,7 @@ const TeamDetails = () => {
 
   return (
     <div className="team-view">
+      {/* Team Details header and ratings */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
         <h2 style={{ marginBottom: 0 }}>Team Details</h2>
         {battleRating !== null && (
@@ -82,6 +85,7 @@ const TeamDetails = () => {
         <p>No Pokémon in your team yet!</p>
       ) : (
         <ul>
+          {/* Map team roster to boxes with info */}
           {pokeDetails.map((poke, idx) => (
             poke ? (
               <li key={idx} style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px', borderRadius: '8px' }}>
@@ -108,7 +112,6 @@ const TeamDetails = () => {
                 <div style={{ marginTop: '10px', fontStyle: 'italic', color: '#fff' }}>
                   Pokédex Entry: {pokedexEntries[idx]}
                 </div>
-                {/* Add more details as needed */}
               </li>
             ) : (
               <li key={idx}>Error loading details for this Pokémon.</li>
