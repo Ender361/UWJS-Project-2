@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const MAX_POKEMON = 1025;
 
 
-/* A component that fetches a certain number of pokemon from the api, then returns an array of pokemon objects */
+/* A component that prompts the user and then fetches a certain number of Pokémon from the API, then returns an array of Pokémon objects */
 const PokemonList = () => {
   /* Initialize state variables */
   const [pokemon, setPokemon] = useState([]);
@@ -13,7 +13,7 @@ const PokemonList = () => {
   const [error, setError] = useState(null);
   const [numPokemon, setNumPokemon] = useState('');
 
-  /* Async function that creates and populates an array (pokemon) with Pokemon objects from the API (number generated is determined by user input) */
+  /* Async function that creates and populates an array (pokemon) with Pokémon objects from the API (number generated is determined by user input) */
   const handleFetchPokemon = async (e) => {
     e.preventDefault();
     const num = parseInt(numPokemon);
@@ -30,7 +30,7 @@ const PokemonList = () => {
     
     try {
       const promises = [];
-      /* For loop that grabs the user-specified amount of pokemon */
+      /* For loop that grabs the user-specified amount of Pokémon */
       for (let i = 1; i <= num; i++) {
         promises.push(fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(res => res.json()));
       }
@@ -66,7 +66,7 @@ const PokemonList = () => {
           </form>
         </div>
       ) : (
-        /* Div that renders array of Pokemon to screen showing Pokemon name and an image, with the entire element being a link to details page */
+        /* Div that renders array of Pokémon to screen showing Pokémon name and an image, with the entire element being a link to details page */
         <div className="pokemon-list">
           {pokemon.map(poke => (
             <Link key={poke.id} to={`/pokemon/${poke.name}`} style={{ textDecoration: 'none', color: 'inherit' }}>

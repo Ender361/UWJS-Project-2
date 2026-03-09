@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import TeamRoster from './TeamRoster';
+import TeamQuickView from './TeamQuickView';
 
-describe('TeamRoster', () => {
+describe('TeamQuickView', () => {
   beforeEach(() => {
     localStorage.clear();
   });
 
   it('shows empty team message when no team exists', () => {
-    render(<TeamRoster />);
+    render(<TeamQuickView />);
 
     expect(screen.getByText('No Pokémon in your team yet!')).toBeInTheDocument();
   });

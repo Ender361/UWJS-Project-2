@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
-/* A component that creates a team roster box on the screen which uses local storage to store up to 3 pokemon objects */
-const TeamRoster = () => {
+/* A component that creates a team quick view section on the screen which uses local storage to store up to 3 Pokémon */
+const TeamQuickView = () => {
 	const [team, setTeam] = useState([]);
 
 	useEffect(() => {
@@ -26,21 +25,22 @@ const TeamRoster = () => {
 	return (
 		<div className="team-roster">
 			<h2>Your Pokémon Team</h2>
-      {/* Clear team button */}
+	{/* Clear team button */}
 			<button
 				onClick={() => {
 					setTeam([]);
 					localStorage.removeItem('pokemonTeam');
+					localStorage.removeItem('battleRating');
+					localStorage.removeItem('cutenessRating');
 				}}
 				style={{ marginBottom: '10px' }}
 			>Clear Team</button>
-      {/* List of team pokemon */}
+	{/* List of team Pokémon */}
 			<ul>
 				{team && team.length > 0 ? (
 					team.map((pokemon, idx) => (
 						<li key={idx}>
 							  <span>{pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</span>
-							{/* Add more details or images here */}
 						</li>
 					))
 				) : (
@@ -51,4 +51,4 @@ const TeamRoster = () => {
 	);
 };
 
-export default TeamRoster;
+export default TeamQuickView;

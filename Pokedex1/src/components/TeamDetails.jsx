@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-// TeamView: Shows detailed info for each Pokémon in the user's team
-const TeamView = () => {
+/* TeamDetails: Shows detailed info for each Pokémon in the user's team */
+const TeamDetails = () => {
   const [team, setTeam] = useState([]);
   const [pokeDetails, setPokeDetails] = useState([]);
   const [pokedexEntries, setPokedexEntries] = useState([]);
   const [showShiny, setShowShiny] = useState({});
+  const [battleRating, setBattleRating] = useState(null);
+  const [cutenessRating, setCutenessRating] = useState(null);
 
   const toggleShiny = (pokemonKey) => {
     setShowShiny((prev) => ({
@@ -39,13 +41,43 @@ const TeamView = () => {
       ).then(results => {
         setPokeDetails(results.map(r => r.pokeData));
         setPokedexEntries(results.map(r => r.entry));
+        // Calculate ratings only if not already stored
+        let storedBattle = localStorage.getItem('battleRating');
+        let storedCuteness = localStorage.getItem('cutenessRating');
+        if (!storedBattle || !storedCuteness) {
+          // Calculate Battle Rating
+          const totalHP = results.reduce((sum, r) => {
+            const hp = r.pokeData.stats.find(s => s.stat.name === 'hp')?.base_stat || 0;
+            return sum + hp;
+          }, 0);
+          const battle = totalHP + Math.floor(Math.random() * 30) + 1;
+          const cuteness = Math.floor(Math.random() * 100) + 1;
+          localStorage.setItem('battleRating', battle);
+          localStorage.setItem('cutenessRating', cuteness);
+          setBattleRating(battle);
+          setCutenessRating(cuteness);
+        } else {
+          setBattleRating(Number(storedBattle));
+          setCutenessRating(Number(storedCuteness));
+        }
       });
+    } else {
+      setBattleRating(null);
+      setCutenessRating(null);
     }
   }, []);
 
   return (
     <div className="team-view">
-      <h2>Team Details</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <h2 style={{ marginBottom: 0 }}>Team Details</h2>
+        {battleRating !== null && (
+          <span style={{ fontWeight: 'bold', color: '#e91e63' }}>Battle Rating: {battleRating}</span>
+        )}
+        {cutenessRating !== null && (
+          <span style={{ fontWeight: 'bold', color: '#1976d2' }}>Cuteness Rating: {cutenessRating}/100</span>
+        )}
+      </div>
       {team.length === 0 ? (
         <p>No Pokémon in your team yet!</p>
       ) : (
@@ -88,4 +120,4 @@ const TeamView = () => {
   );
 };
 
-export default TeamView;
+export default TeamDetails;

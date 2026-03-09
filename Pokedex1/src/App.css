@@ -26,6 +26,11 @@
   border: none;
 }
 
+/* Pokemon input form */
+.pokemon-input-form input[type="number"] {
+  width: 220px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

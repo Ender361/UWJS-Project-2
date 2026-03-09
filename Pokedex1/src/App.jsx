@@ -1,7 +1,7 @@
 import './App.css';
 import PokemonList from './components/PokemonList';
 import PokemonDetails from './components/PokemonDetails';
-import TeamRoster from './components/TeamRoster';
+import TeamRoster from './components/TeamQuickView';
 import TeamView from './components/TeamView';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
