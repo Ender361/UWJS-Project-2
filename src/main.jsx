@@ -6,7 +6,7 @@ import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter basename="/UWJS-Project-2">
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </StrictMode>,
